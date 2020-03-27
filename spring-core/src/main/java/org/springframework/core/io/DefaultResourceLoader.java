@@ -16,6 +16,7 @@
 
 package org.springframework.core.io;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
@@ -24,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
@@ -208,4 +210,29 @@ public class DefaultResourceLoader implements ResourceLoader {
 		}
 	}
 
+	public static void main(String[] args) throws IOException {
+		ResourceLoader resourceLoader = new DefaultResourceLoader();
+		Resource fileResource1 = resourceLoader.getResource("/Users/fuyuaaa/Desktop/test.txt");
+		System.out.println("fileResource1 is FileSystemResource:" + (fileResource1 instanceof FileSystemResource));
+
+		Resource fileResource2 = resourceLoader.getResource("/Users/fuyuaaa/Desktop/test.txt");
+		System.out.println("fileResource2 is ClassPathResource:" + (fileResource2 instanceof ClassPathResource));
+
+		Resource urlResource1 = resourceLoader.getResource("file:/Users/fuyuaaa/Desktop/test.txt");
+		System.out.println("urlResource1 is UrlResource:" + (urlResource1 instanceof UrlResource));
+
+		Resource urlResource2 = resourceLoader.getResource("http://www.baidu.com");
+		System.out.println("urlResource1 is urlResource:" + (urlResource2 instanceof  UrlResource));
+
+		ResourceLoader fileSystemResourceLoader = new FileSystemResourceLoader();
+		Resource fileSystemResource = fileSystemResourceLoader.getResource("/Users/fuyuaaa/Desktop/test.txt");
+		System.out.println("fileSystemResource is FileSystemResource:" + (fileSystemResource instanceof FileSystemResource));
+
+		//spring 提供的批量资源加载器
+		PathMatchingResourcePatternResolver pathMatchingResourcePatternResolver = new PathMatchingResourcePatternResolver(fileSystemResourceLoader);
+		Resource[] resources = pathMatchingResourcePatternResolver.getResources("classpath*:*/test.txt");
+		for (int i = 0; i < resources.length; i++) {
+			System.out.println("resource is FileSystemResource:" + (resources[i] instanceof FileSystemResource));
+		}
+	}
 }
