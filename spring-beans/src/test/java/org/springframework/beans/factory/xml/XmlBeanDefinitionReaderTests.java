@@ -19,6 +19,8 @@ package org.springframework.beans.factory.xml;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.FuyuDocumentReaderClass;
+import org.springframework.core.SimpleAliasRegistry;
 import org.xml.sax.InputSource;
 
 import org.springframework.beans.factory.BeanDefinitionStoreException;
@@ -40,6 +42,16 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
  * @author Sam Brannen
  */
 public class XmlBeanDefinitionReaderTests {
+
+	@Test
+	public void test(){
+		ClassPathResource resource = new ClassPathResource("test-bean-fuyu.xml");
+		DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
+		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
+		reader.setDocumentReaderClass(FuyuDocumentReaderClass.class);
+		int count = reader.loadBeanDefinitions(resource);
+		System.out.println(count);
+	}
 
 	@Test
 	public void setParserClassSunnyDay() {
